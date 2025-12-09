@@ -1,0 +1,68 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	Issue Test scenario. CRUD Operation: Create, Read, Update, Delete
+
+# TODO: Write Precondition and Postcondition, Tags 
+
+Pre Condition	Tips: Project must be created by the user before	User is successfully logged into GitLab.
+Post Condition	All created test issues are closed or deleted.
+Tags	Issue, Creation, Deletion, Update, ProjectManagement
+
+#******************* Common Variables ********************
+
+
+*** Variables ***
+
+# NOTE: Please Remove your login credential before uploading Assignments
+
+# TODO: Write Issue creation field variables, Updated name of the issue
+
+# Credentials (Use the same as in previous files)
+VALID_USERNAME =
+VALID_PASSWORD = 
+
+# Issue details
+ISSUE_TITLE_1 = Test Issue for Deletion ${RANDOM}
+ISSUE_TITLE_2 = Second Issue for Update Test
+ISSUE_DESCRIPTION = This is a test description for the issue.
+UPDATED_ISSUE_TITLE = Issue Name Updated ${RANDOM}
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+# TODO: Write Positive Test Cases and Test Process steps
+
+# Positive Test examples are below write test process steps for each below test case
+
+	Create issue
+	[Documentation]    Creates the first issue (which will be deleted later).
+    	[Tags]             Positive, Create
+
+	# 1. Navigate to the "New Issue" page
+	
+	# 2. Input Issue Title
+
+	# 3. Input Issue Description
+	
+	# 4. Click "Create issue" button
+
+	# 5. Verify success: Issue is created, and title is visible on the issue page
+
+	# 6. Store the Issue URL or ID for later use
+	
+	# 7. Store the URL of the created issue
+
+ 	Delete first issue
+	[Documentation]    Deletes the first issue created in this test suite.
+    	[Tags]             Positive, Delete
+
+	# 1. Scroll down and click the "Delete issue" button
+
+	# 2. Confirm the deletion in the modal/dialog
+
+	# 3. Verify success: User is redirected to the Issue List page, and success message appears.
+	

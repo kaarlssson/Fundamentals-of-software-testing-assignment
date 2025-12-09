@@ -1,0 +1,125 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+
+# TODO: Write Dcocumentation e.g. Project Test scenario. CRUD Operation: Create, Read, Update, Delete
+
+Documentation	
+
+# TODO: Write Precondition, Postcondition, Tags
+
+Pre Condition	User is successfully logged into GitLab using valid credentials. Browser is open.
+Post Condition	Test project data is cleaned up (deleted). Browser is closed.
+Tags		Project, CRUD, Creation, Deletion, Update 
+
+#******************* Common Variables ********************
+
+*** Variables ***
+
+# NOTE: Please Remove your login credential before uploading Assignments
+
+# TODO: Write Project creation field variables
+
+# Use the same credentials as in 03_RegisterPage.txt
+	VALID_USERNAME = 
+	VALID_PASSWORD = 
+
+LoginUrl = https://gitlab.com/users/sign_in
+ProjectCreationUrl = https://gitlab.com/projects/new
+PROJECT_SLUG = test-project-${RANDOM}
+PROJECT_PATH = ${VALID_USERNAME}/${PROJECT_SLUG}
+NEW_PROJECT_NAME = Test Project ${RANDOM}
+UPDATED_NAME = Updated Test Project Name
+EMPTY =
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+# TODO: Write Positive and Negative Test Cases and Test Process steps
+
+# Positive Test examples are below write test process steps for each below test case
+
+	Create blank Project
+	[Documentation]    Creates a new blank project and verifies the success message.
+    	[Tags]             Positive, Create
+	
+	# Assuming login is done in Pre-Condition or Setup keyword.
+	Go To    ${ProjectCreationUrl}
+    
+    	Input Text    id:project_name    ${NEW_PROJECT_NAME}
+    	Input Text    id:project_path    ${PROJECT_SLUG}
+    	Click Element    id:project_visibility_level_20    # Private
+    
+    	Click Button    text:Create project
+	
+	# Valide that message is showing Project 'First project ' was successfully created.
+	
+
+	Create template Project
+	[Documentation]    Creates a new project using a template 
+    	[Tags]             Positive, Create, Template
+	
+	Go To    ${ProjectCreationUrl}
+	
+	Click Element    xpath://a[@id='create_from_template_tab']    # Switch to template tab
+    	Click Button    css:a[href*='html5-up-massively']    # Select a specific template
+	
+	Input Text    id:project_name    Template Project ${RANDOM}
+    	Input Text    id:project_path    template-project-${RANDOM}
+    	Click Element    id:project_visibility_level_20    # Private
+	
+	Click Button    text:Create Project
+	
+	Wait Until Page Contains    Project 'Template Project' was successfully created.
+	Page Should Contain    Project 'Template Project' was successfully created.	
+
+	Update name of template Project
+	[Documentation]    Changes the name of the most recently created template project.
+    	[Tags]             Positive, Update
+	
+	# Pre-step: Navigate to the project Settings page
+	# Assume we navigate to Settings > General
+
+	Input Text    id:project_name    ${UPDATED_NAME}
+	
+	Click Button    text:Save changes
+
+	Wait Until Page Contains    Project settings were successfully updated.
+	Page Should Contain    Project settings were successfully updated.
+
+	# Verify the new name is displayed on the page
+    	Page Should Contain    ${UPDATED_NAME}
+	[Documentation]    Deletes the project created in the 'Create blank project' test case.
+    	[Tags]             Positive, Delete
+	
+	Go To    https://gitlab.com/${LAST_CREATED_PROJECT_PATH}/-/settings/general
+
+	Click Link    text:Expand    # Expand the Advanced Settings section
+
+	Click Button    text:Remove Project
+
+	
+
+	Delete template project
+	Valide that message is showing Project 'First project ' was successfully created.
+
+# Negative Test examples are below write test process steps for each below test case
+
+	Create a blank project with the previous same name
+	[Documentation]    Verifies that creating a new project with an existing slug fails.
+    	[Tags]             Negative, DuplicateName
+
+	# 1. Navigate to the project creation page
+    	Go To    ${ProjectCreationUrl}
+    
+   	# 2. Fill in Project Name and Path using the name/path of the already deleted project (if deletion failed) or another existing project
+    	Input Text    id:project_name    ${LAST_CREATED_PROJECT_NAME}
+    	Input Text    id:project_path    ${PROJECT_SLUG} 
+    
+    	Click Button    text:Create project
+    
+   	# 3. Verify error
+    	Wait Until Page Contains Element    
+    	Page Should Contain    Name has already been taken
